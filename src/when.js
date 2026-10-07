@@ -1,4 +1,4 @@
-// Agents Office V3.5 — routine schedules. Shared by the page (src/tasks.js) and the server
+// Delux crew V3.5 — routine schedules. Shared by the page (src/tasks.js) and the server
 // (routines.mjs): plain words → a schedule, a schedule → the next time it is due, and a
 // schedule → the words the office uses to say it back. Local time throughout: the office keeps
 // the machine's real clock and so do routines.

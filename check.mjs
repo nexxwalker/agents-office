@@ -1,4 +1,4 @@
-// Agents Office — the build loop (Beta).
+// Delux crew — the build loop (Beta).
 //   node check.mjs             build + offline smoke + server smoke (no Claude calls)
 //   CHECK_LIVE=1 node check.mjs  … plus one real routed task and one chat turn through Claude
 // Every step prints ✓ or ✗ with the reason; the process exits 1 if anything failed. This is the
@@ -26,7 +26,7 @@ await step('build: braingraph + bundle', async () => {
   const out = await sh('node', ['build.mjs']);
   const html = fs.readFileSync(path.join(ROOT, 'dist', 'command-centre-v2.html'), 'utf8');
   if (html.length < 500000) throw new Error('bundle looks too small: ' + html.length);
-  if (!/AGENTS OFFICE/.test(html)) throw new Error('shell missing');
+  if (!/DELUX CREW/.test(html)) throw new Error('shell missing');
   return out.trim().split('\n').pop();
 });
 await step('build: graph has linked notes', async () => {
@@ -458,7 +458,7 @@ else {
   if (!up) bad('server: starts', log.trim().split('\n').slice(-2).join(' | ') || 'no health response');
   else {
     ok('server: starts', `${up.name} · ${up.backend} · brain ${up.notes} notes`);
-    await step('server: serves the office', async () => { const r = await fetch(base + '/'); const t = await r.text(); if (!/AGENTS OFFICE/.test(t)) throw new Error('html missing'); });
+    await step('server: serves the office', async () => { const r = await fetch(base + '/office'); const t = await r.text(); if (!/DELUX CREW/.test(t)) throw new Error('html missing'); });
     await step('server: /api/brain has the live graph', async () => { const g = await (await fetch(base + '/api/brain')).json(); if (!g.nodes.length) throw new Error('empty'); return `${g.nodes.length} linked notes`; });
     await step('server: /api/mcp lists this machine\'s connectors', async () => {
       const m = await (await fetch(base + '/api/mcp')).json();

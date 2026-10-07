@@ -1,13 +1,13 @@
-// Agents Office V3 — the work layer.
-// V3.3 (AJ, 6 Sep 2026): a PERMANENT Task Status panel on the right — a one-line command bar
+// Delux crew V3 — the work layer.
+// V3.3 (the owner, 6 Sep 2026): a PERMANENT Task Status panel on the right — a one-line command bar
 // (department dropdown + input, the office names the agent as you type) over a live feed of
 // every task, newest change first, with status chips as filters. The flying tickets are gone:
 // new work and handoffs simply appear in the feed (and a 📋 pops over the desk). Each status
 // carries its own honest meta — backlog: how long it has waited · in progress: a real progress
-// bar · waiting: minutes waiting for AJ's tick · done: the time it finished. Company-wide
+// bar · waiting: minutes waiting for the owner's tick · done: the time it finished. Company-wide
 // Kanban still lives on B. DOING / NEXT / DONE rows stay on every pod card.
-// Session-only theatre — nothing persists (AJ's call: gauge interest first).
-// V3.5 (AJ, 9 Sep 2026): ROUTINES — tasks on the office's own clock, Emails / Accounting / Sales
+// Session-only theatre — nothing persists (the owner's call: gauge interest first).
+// V3.5 (the owner, 9 Sep 2026): ROUTINES — tasks on the office's own clock, Emails / Accounting / Sales
 // only this release. Set one in the bar ("every weekday at 8am, …" or the REPEAT picker), by
 // telling an agent in chat, or in <brain>/Agents Office/routines.json. Live: the server keeps the
 // clock, fires and runs them page or no page; this page polls and shows the card move
@@ -29,9 +29,9 @@ import { MODEL_KEYS, MODELS, DEFAULT_MODEL, modelName, normModel, FROM_TEXT , EF
 
 const SEGMENTS = ['roofing', 'HVAC', 'dental', 'logistics', 'fitness', 'property', 'landscaping', 'legal'];
 
-// generic-business task pool per agent (AJ: generic business, not TerriTool-flavoured)
+// generic-business task pool per agent (the owner: generic business, not TerriTool-flavoured)
 const POOL = {
-  elead: ['Review the overnight inbox, route 40 emails', 'Tone pass on 6 client replies', 'Weekly inbox summary for AJ', 'Update the reply templates', 'Escalate 2 threads to AJ'],
+  elead: ['Review the overnight inbox, route 40 emails', 'Tone pass on 6 client replies', 'Weekly inbox summary for Delux crew', 'Update the reply templates', 'Escalate 2 threads to Delux crew'],
   cmail: ['Reply to the {co} scope question', 'Send the kickoff summary to {co}', 'Answer 9 client emails from overnight', 'Draft the price-increase notice', 'Chase {co} for the brief sign-off'],
   imail: ['Triage 14 internal emails', 'Circulate the weekly numbers', 'Reply to the team about the Q3 plan', 'Summarise the 40-message thread', 'Book the client review in the calendar'],
   vmail: ['Summarise the vendor SLA revision', 'Reply to the SMS provider about the plan tier', 'Request a quote from the print vendor', 'Chase the hosting vendor on the outage report', 'Confirm the vendor renewal date'],
@@ -42,14 +42,14 @@ const POOL = {
   pros:  ['Mine {n} {segment} companies for outbound', 'Score 40 prospects against the ICP', "Build tomorrow's cold-call list", 'Cross-check new finds against customers', 'Verify mobiles on the new batch'],
   piper: ['Proposal for the 40-seat prospect', 'Update the Growth-plan proposal template', 'Pricing options for {co}', 'Proposal follow-up pack for {co}', 'Sign-online link for the {co} proposal'],
   folo:  ['Follow up {n} quotes sent last week', 'Re-engage 8 cold leads', 'Log call outcomes into the CRM', 'Send the 14-day nudge to quiet deals', 'Book a demo for {co}'],
-  mlead: ["Review the week's content before it ships", 'Shift $50/day into the winning ad', 'Set next week’s reel line-up', 'Weekly marketing summary for AJ', 'Brief Research on the {segment} angle'],
+  mlead: ["Review the week's content before it ships", 'Shift $50/day into the winning ad', 'Set next week’s reel line-up', 'Weekly marketing summary for Delux crew', 'Brief Research on the {segment} angle'],
   riley: ['Morning scan: 49 sources', 'Weekly competitor pricing scan', 'Pull 3 stats for the newsletter', 'Trend brief for the Sales Lead', 'Read 6 buyer reviews for angles'],
   newt:  ['Draft the September newsletter', 'A/B subject lines for issue 32', 'Log issue 31 numbers', 'Rebuild the welcome sequence, email 2', 'Clean 40 bounced subscribers'],
   gfx:   ['Quote-card set for the pricing page', 'Story + square exports, brand kit', 'Thumbnail for the "10am rule" reel', 'Carousel cover, 3 options', 'Resize the ad creative to 4:5'],
   ada:   ['Refresh the fatigued ad set', 'Launch 4 variants of "cold call anxiety"', 'Pull the daily spend report', 'Shift $50/day into the winner', 'Exclude existing customers from targeting'],
   iggy:  ['Write the hook for the carousel', 'Log hook performance to the playbook', 'Schedule 3 posts for the week', 'Reply to 14 DMs', 'Cut the caption on the "10am rule" reel'],
   vid:   ['Render the "10am rule" reel, captions on', 'Cut a 15 s teaser from the demo', 'Re-render ad variants in 4:5', 'Caption pass on the webinar clip', 'Colour + captions on the founder reel', 'Render the 45 s demo cut'],
-  olead: ["Review the week's contracts and flags", 'Chase {n} open vendor renewals', 'Prioritise Intel’s findings', 'Weekly operations summary for AJ', 'Prep the board pack sections'],
+  olead: ["Review the week's contracts and flags", 'Chase {n} open vendor renewals', 'Prioritise Intel’s findings', 'Weekly operations summary for Delux crew', 'Prep the board pack sections'],
   scout: ['Competitor pricing page diff', 'G2 review scan for the top 3 rivals', 'Opportunity memo: rival price rise', 'Market map refresh, Q3', 'Watch the rival launch page'],
   legal: ['Review the amended MSA, 2 clauses', 'Contractor agreement for the designer', 'Privacy policy annual check', 'Redline the {co} terms', 'Check the price-lock clause'],
   comply:['AU regulation page changed, diffing', 'Consent wording audit on the forms', 'Data retention check, 3 systems', 'Quarterly compliance checklist', 'Cookie banner review'],
@@ -59,7 +59,7 @@ const POOL = {
   invo:  ['Issue {n} invoices for the week', 'Chase 3 overdue invoices', 'Credit note for {co}', 'Invoice {co} $840', 'Reminder 2 of 3 to {co}'],
   apay:  ["Match today's card charges", 'Audit contractor invoice #218 vs contract', 'Schedule the contractor payments', 'Flag a subscription overlap', 'Check the SMS provider plan tier'],
   recon: ['Reconcile 14 payments, 2 flagged', 'Month-end bank reconciliation', 'Match Stripe payouts to invoices', 'Clear 2 unmatched fees', 'Tie out the card statement'],
-  dlead: ['Review 12 live projects for risk', 'Weekly delivery summary for AJ', 'Re-plan the {co} timeline', 'Approve the {co} handover', 'Staff the {co} project'],
+  dlead: ['Review 12 live projects for risk', 'Weekly delivery summary for Delux crew', 'Re-plan the {co} timeline', 'Approve the {co} handover', 'Staff the {co} project'],
   pco:   ['Update the {co} project plan', 'Move 3 milestones after the scope change', 'Chase 2 overdue client sign-offs', 'Schedule the {co} review', 'Log this week’s hours per project'],
   qa:    ['QA the {co} website handover', 'Check the {co} report pack for errors', 'Test the client portal login flow', 'Proof the asset set, brand rules', 'Regression pass on the booking form'],
   crep:  ['September status report for {co}', 'Monthly report pack, 14 clients', 'Add the results section to the {co} report', 'Send the {co} report, 2 flags', 'Chart the {co} lead numbers'],
@@ -844,7 +844,7 @@ export function initTasks(ctx) {
     const tot = st => DEPT_KEYS.reduce((s, k) => s + deptTasks(k, st).length, 0);
     const doneAll = DEPT_KEYS.reduce((s, k) => s + doneCount[k], 0);
     return `<div class="bd-head">
-        <span class="b-name"><span class="bd-title">Agents Office</span>Today's board</span>
+        <span class="b-name"><span class="bd-title">Delux crew</span>Today's board</span>
         <span class="bd-stats"><span>SCHEDULED<b>${routines.length + tot('scheduled')}</b></span><span>IN PROGRESS<b>${tot('doing')}</b></span><span>BACKLOG<b>${tot('next')}</b></span><span>WAITING<b>${tot('waiting')}</b></span><span>DONE<b>${doneAll}</b></span></span></div>
       <div class="bd-lanes"><div class="lh"></div>${COLS.map(([, lab]) => `<div class="lh">${lab}</div>`).join('')}
       ${DEPT_KEYS.map(k => {
@@ -1011,7 +1011,7 @@ export function initTasks(ctx) {
     tasks.splice(tasks.indexOf(t), 1); dirty = true; feedPush(R[t.agent], '✕', `Cancelled: ${t.title}`);
     return true;
   }
-  const calendar = initCalendar({ tasks, routines, agentOf, DEPTS, DEPT_KEYS, RT_DEPTS, rtRefuse, create: createScheduled, createRoutine: createRoutineAt, cancelTask: cancelScheduled, rtAct, openAgent: (id, tab) => openAgent && openAgent(id, tab), esc, isLive: () => live, officeModel: () => officeModel, MODEL_KEYS, modelName, business: () => document.title.replace(/ — Agents Office$/, ''), currentDept: () => dept });
+  const calendar = initCalendar({ tasks, routines, agentOf, DEPTS, DEPT_KEYS, RT_DEPTS, rtRefuse, create: createScheduled, createRoutine: createRoutineAt, cancelTask: cancelScheduled, rtAct, openAgent: (id, tab) => openAgent && openAgent(id, tab), esc, isLive: () => live, officeModel: () => officeModel, MODEL_KEYS, modelName, business: () => document.title.replace(/ — Delux crew$/, ''), currentDept: () => dept });
   return { tick, toggle, open, close, openFor, isOpen, boardWidth, onFocusChange, onStuck, onResolve, calendar, createScheduled, cancelScheduled,
            handleChat, addTask, revise, rowHTML, setDept, tasks, panelWidth: () => panel.offsetWidth, isLive: () => live,
            routines, addRoutine, rtAct, railFor, syncPills, refresh: poll, resolveLive, pendingReject, rejectLive, officeModel: () => officeModel, chosenModel, chosenEffort };

@@ -1,4 +1,4 @@
-// Agents Office — the agents learn from your corrections (Beta).
+// Delux crew — the agents learn from your corrections (Beta).
 // Every time a deliverable is sent back ("revise: …" in the chat), the correction is written to
 //   <brain>/Agents Office/feedback/<agent-id>.md
 // Claude sorts it: a one-off about that task, or a standing rule that should apply every time.

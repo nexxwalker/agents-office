@@ -1,4 +1,4 @@
-// Agents Office — configuration (Beta).
+// Delux crew — configuration (Beta).
 // office.config.json is the shipped default; office.config.local.json (gitignored) overrides it;
 // environment variables override both: AO_NAME, AO_BRAIN, PORT, AO_MODEL.
 // V3.1 keys: mcp { allow, deny, departments } · tools { web } · timeout (seconds per agent run) — see mcp.mjs.
@@ -16,7 +16,7 @@ function readJSON(p) {
 export function loadConfig() {
   const base = readJSON(path.join(ROOT, 'office.config.json'));
   const local = readJSON(path.join(ROOT, 'office.config.local.json'));
-  const c = { name: 'Agents Office', brain: './brain', port: 4520, model: 'sonnet', ...base, ...local }; // V3.6: model = sonnet · opus · fable
+  const c = { name: 'Delux crew', brain: './brain', port: 4520, model: 'sonnet', ...base, ...local }; // V3.6: model = sonnet · opus · fable
   c.mcp = { allow: [], deny: [], departments: {}, ...(base.mcp || {}), ...(local.mcp || {}) };
   c.tools = { web: true, browser: true, ...(base.tools || {}), ...(local.tools || {}) }; // V3.2 (16 Sep): browser = Claude in Chrome
   c.teams = { enabled: true, max: 4, ...(base.teams || {}), ...(local.teams || {}) }; // V3.2 (16 Sep): Agent Teams

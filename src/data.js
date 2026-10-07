@@ -1,4 +1,4 @@
-// Agents Office v2 — roster + design tokens (ported from v1 command-centre.html)
+// Delux crew v2 — roster + design tokens (ported from v1 command-centre.html)
 import { applyData } from './profile.js';
 
 // Nominal.so tokens (locked design language, 30 Jul 2026)
@@ -14,7 +14,7 @@ export const TOKENS = {
 // NOTE (17 Aug 2026): the old 'ops' pod split in two. The accounting half kept the pod,
 // the periwinkle palette and the key 'fin' (now FINANCE); Proposals + Intel moved out into
 // a new 'ops' pod (OPERATIONS) alongside Legal Review, Compliance and Internal Reporting.
-// V3.1 (5 Sep 2026, AJ): SUPPORT → EMAILS (same mint slot), new DELIVERY pod (sky) on the top axis.
+// V3.1 (5 Sep 2026, the owner): SUPPORT → EMAILS (same mint slot), new DELIVERY pod (sky) on the top axis.
 export const DEPT_KEYS = ['emails', 'sales', 'marketing', 'ops', 'fin', 'delivery'];
 export const DEPTS = {
   emails:    { name: 'EMAILS',           short: 'EMAILS',  chip: '#5ADEB7', ink: '#1E9070', floor: '#E9F6EF' },
@@ -71,7 +71,7 @@ export const AGENTS = [
   { id: 'ona',   name: 'ONBOARDER',           dept: 'delivery',  grid: [1, 3], hair: '#0d0d0d', skin: '#9C6B43' },
 ];
 
-// Plinth placement in world XZ. Brain central; departments well separated (AJ: not too close at zoom-out).
+// Plinth placement in world XZ. Brain central; departments well separated (the owner: not too close at zoom-out).
 export const LAYOUT = {
   brain:     { pos: [0, 0],     w: 16, d: 16 },
   emails:    { pos: [-30, -23], w: 20, d: 26 },
@@ -95,12 +95,12 @@ export const BILLBOARDS = {
   brain:     [{ id: 'notes',     label: 'NOTES INDEXED',    val: 1204, fmt: v => Math.round(v).toLocaleString('en-NZ') }],
 };
 
-// Approval asks (agent requests → AJ decides; v1 flavour).
+// Approval asks (agent requests → the owner decides; v1 flavour).
 // Per-agent first so the ask matches who's asking; dept pool is the fallback.
 export const APPROVAL_ASKS = {
   emails:    ['Send the price-increase notice to 120 clients — draft attached', 'Reply to the contractor dispute thread — draft attached'],
   delivery:  ['Ship the September report pack to 14 clients', 'Release the brand assets to the client portal'],
-  sales:     ['Send re-engagement SMS to 214 cold leads', 'Move 8 enterprise leads to SPENCER’s queue'],
+  sales:     ['Send re-engagement SMS to 214 cold leads', 'Move 8 enterprise leads to SENIOR REP’s queue'],
   marketing: ['Launch 4 Meta ad variants — $120/day budget', 'Publish reel “cold call maths” to Instagram'],
   ops:       ['Send proposal PDF to Ridgeline Property Group', 'Sign off the amended MSA for Kea Logistics — 2 clauses flagged'],
   fin:       ['Invoice #218 doesn’t match the contract — hold for review?', 'Write off $180 of unmatched card fees'],
@@ -128,7 +128,7 @@ export const WORKLINES = {
   emails: [
     '▸ drafting reply — client scope question',
     '▸ vendor thread: SLA revision summarised',
-    '▸ 14 internal emails triaged · 3 for AJ',
+    '▸ 14 internal emails triaged · 3 for Delux crew',
     '▸ contractor invoice query answered',
   ],
   delivery: [
@@ -139,7 +139,7 @@ export const WORKLINES = {
   ],
   sales: [
     '▸ enriching lead — Summit HVAC',
-    '▸ routed 6 leads → ARWIN (4.2h queued)',
+    '▸ routed 6 leads → PRIMARY REP (4.2h queued)',
     '▸ 32 prospects verified · 91% valid',
     '▸ onboarding text sent — Bay Plumbing',
   ],

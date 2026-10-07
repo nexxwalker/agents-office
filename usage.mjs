@@ -1,7 +1,7 @@
-// Agents Office V3.6 — the usage gauge: what the subscription has used, shown the way Claude Code's
+// Delux crew V3.6 — the usage gauge: what the subscription has used, shown the way Claude Code's
 // own usage screen shows it (session and week, percent and reset time).
 //
-// A3 (AJ, 9 Sep 2026): read the same endpoint Claude Code reads, with the token Claude Code already
+// A3 (the owner, 9 Sep 2026): read the same endpoint Claude Code reads, with the token Claude Code already
 // keeps on this machine (the keychain on macOS, ~/.claude/.credentials.json elsewhere). The token
 // is read into memory, sent only to Anthropic's usage endpoint, never logged, never written. The
 // endpoint is not a documented one, so when it does not answer the office falls back to its own

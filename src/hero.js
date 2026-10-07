@@ -1,4 +1,4 @@
-// Hero mode for sahni.ai/custom (16 Sep 2026). Opt-in: the page sets window.HERO before the bundle;
+// Hero mode for the company website (16 Sep 2026). Opt-in: the page sets window.HERO before the bundle;
 // without it every export here is inert and the office is unchanged.
 //
 //   window.HERO = { front: 'marketing', target: [-18, 0, 12], zoom: 1.25, keep: ['mlead','riley','gfx'] }
@@ -134,17 +134,17 @@ export function initHero({ THREE, scene, R, AGENTS, deptRT, LAYOUT, DEPTS, DEPT_
     x.fillStyle = '#1b1f23'; x.fillRect(0, 0, W, H);
     x.fillStyle = '#2a2e33'; x.fillRect(0, 0, W, 24);
     ['#ff5f57', '#febc2e', '#28c840'].forEach((col, i) => { x.fillStyle = col; x.beginPath(); x.arc(14 + i * 14, 12, 4, 0, 7); x.fill(); });
-    x.fillStyle = '#3a3f45'; roundRect(x, 64, 5, W - 80, 14, 7); x.fill(); x.fillStyle = '#cfd3d8'; x.font = '10px Menlo, monospace'; x.textBaseline = 'middle'; x.textAlign = 'left'; x.fillText(L.url, 72, 12);
+    x.fillStyle = '#3a3f45'; roundRect(x, 64, 5, W - 80, 14, 7); x.fill(); x.fillStyle = '#cfd3d8'; x.font = '10px system-ui, sans-serif'; x.textBaseline = 'middle'; x.textAlign = 'left'; x.fillText(L.url, 72, 12);
     const navY = 24, navH = 40;
     x.fillStyle = '#1b1f23'; x.fillRect(0, navY, W, navH); x.fillStyle = '#2f3339'; x.fillRect(0, navY + navH - 1, W, 1);
     x.fillStyle = '#0A66C2'; roundRect(x, 10, navY + 8, 24, 24, 4); x.fill();
-    x.fillStyle = '#fff'; x.font = 'bold 15px "Helvetica Neue", Arial, sans-serif'; x.textAlign = 'center'; x.fillText('in', 22, navY + 21);
+    x.fillStyle = '#fff'; x.font = 'bold 15px system-ui, sans-serif'; x.textAlign = 'center'; x.fillText('in', 22, navY + 21);
     x.fillStyle = '#38434f'; roundRect(x, 42, navY + 9, 212, 22, 5); x.fill();
     let shown;
     if (L.query) shown = L.query; else { const qi = Math.floor(now / 7) % LI_QUERIES.length, q = LI_QUERIES[qi]; shown = q.slice(0, Math.max(0, Math.min(q.length, Math.floor(((now % 7) - 0.6) * 11)))) + (Math.floor(now * 2) % 2 ? '|' : ''); }
-    x.fillStyle = '#9aa4ae'; x.font = '11px "Helvetica Neue", Arial, sans-serif'; x.textAlign = 'left'; x.fillText('⌕', 48, navY + 20);
+    x.fillStyle = '#9aa4ae'; x.font = '11px system-ui, sans-serif'; x.textAlign = 'left'; x.fillText('⌕', 48, navY + 20);
     x.fillStyle = '#e8ecf0'; x.fillText(shown, 62, navY + 20);
-    x.font = '9px "Helvetica Neue", Arial, sans-serif'; x.textAlign = 'center';
+    x.font = '9px system-ui, sans-serif'; x.textAlign = 'center';
     ['Home', 'My Network', 'Jobs', 'Messaging', 'Notifications'].forEach((t, i) => { const cx = 296 + i * 46, on = L.query ? i === 2 : i === 0; x.fillStyle = on ? '#ffffff' : '#7f8a95'; x.fillRect(cx - 6, navY + 9, 12, 12); x.fillStyle = on ? '#ffffff' : '#b3bcc5'; x.fillText(t, cx, navY + 30); });
     const top = navY + navH + 4, iw = W - 12, sc = iw / img.naturalWidth, ih = img.naturalHeight * sc;
     L.y = (L.y + dt * L.speed) % ih;
@@ -170,13 +170,13 @@ export function initHero({ THREE, scene, R, AGENTS, deptRT, LAYOUT, DEPTS, DEPT_
   function bubbleTex(text) {
     if (bubbleTexes[text]) return bubbleTexes[text];
     const c = document.createElement('canvas'), x = c.getContext('2d');
-    x.font = 'bold 60px "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif';
+    x.font = 'bold 60px system-ui, sans-serif';
     const tw = Math.ceil(x.measureText(text).width), pad = 44; c.width = tw + pad * 2 + 32; c.height = 256;
     const x2 = c.getContext('2d'), W = c.width;
     const rr = (px, py, w, h, r) => { x2.beginPath(); x2.moveTo(px + r, py); x2.arcTo(px + w, py, px + w, py + h, r); x2.arcTo(px + w, py + h, px, py + h, r); x2.arcTo(px, py + h, px, py, r); x2.arcTo(px, py, px + w, py, r); x2.closePath(); };
     rr(16, 16, W - 32, 168, 34); x2.fillStyle = 'rgba(244,244,245,0.97)'; x2.fill(); x2.lineWidth = 4; x2.strokeStyle = 'rgba(111,160,255,0.9)'; x2.stroke();
     x2.beginPath(); x2.moveTo(W / 2 - 46, 182); x2.lineTo(W / 2, 236); x2.lineTo(W / 2 + 34, 182); x2.closePath(); x2.fillStyle = 'rgba(244,244,245,0.97)'; x2.fill();
-    x2.fillStyle = '#151414'; x2.font = 'bold 60px "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif'; x2.textAlign = 'center'; x2.textBaseline = 'middle';
+    x2.fillStyle = '#151414'; x2.font = 'bold 60px system-ui, sans-serif'; x2.textAlign = 'center'; x2.textBaseline = 'middle';
     x2.fillText(text, W / 2, 102);
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.userData.aspect = W / 256;
     bubbleTexes[text] = t; return t;

@@ -1,4 +1,4 @@
-// INDUSTRY PROFILE (12 Sep 2026, AJ: "separate HTML files, one per industry, dark, with the ANZ /
+// INDUSTRY PROFILE (12 Sep 2026, the owner: "separate HTML files, one per industry, dark, with the ANZ /
 // North America strip swappable"). A per-industry demo file injects `window.PROFILE` ahead of the
 // bundle; every content module below calls one of these appliers at module init and rewrites its
 // constants IN PLACE, so the rest of the office never knows. Without window.PROFILE (the shipped
@@ -174,6 +174,6 @@ export function applyTopbar() {
   if (brand && PROFILE.company) {
     const co = document.createElement('span'); co.className = 'co'; co.textContent = PROFILE.company; brand.appendChild(co);
   }
-  document.title = `${PROFILE.company || PROFILE.industry || 'Agents Office'} — Agents Office`;
+  document.title = `${PROFILE.company || PROFILE.industry || 'Delux crew'} — Delux crew`;
 }
-// (13 Sep 2026, AJ: the ANZ / NORTH AMERICA pill is gone — each region is simply its own file.)
+// (13 Sep 2026, the owner: the ANZ / NORTH AMERICA pill is gone — each region is simply its own file.)

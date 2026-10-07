@@ -136,7 +136,7 @@
       "lead": true,
       "name": "MARKETING LEAD",
       "role": "Marketing Lead",
-      "does": "Runs the marketing team — six agents report to it — owns the content calendar and the ad budget, and reports what worked to AJ weekly.",
+      "does": "Runs the marketing team — six agents report to it — owns the content calendar and the ad budget, and reports what worked to Delux crew weekly.",
       "tools": [
         "meta",
         "clarity",
@@ -222,7 +222,7 @@
       "lead": true,
       "name": "OPERATIONS LEAD",
       "role": "Operations Lead",
-      "does": "Runs operations — five agents report to it — keeps contracts, compliance, intel and reporting moving, and escalates only what needs AJ.",
+      "does": "Runs operations — five agents report to it — keeps contracts, compliance, intel and reporting moving, and escalates only what needs Delux crew.",
       "tools": [
         "notion",
         "gmail",

@@ -1,4 +1,4 @@
-// Agents Office — the roster (Beta). Who sits where is fixed (six pods, 35 seats); what each
+// Delux crew — the roster (Beta). Who sits where is fixed (six pods, 35 seats); what each
 // agent is called, does and uses is yours to change in office.agents.json.
 //   built-in defaults  ← office.agents.json  ← <brain>/Agents Office/agents.json  ← office.agents.local.json (gitignored)
 // Departments, leads and seats cannot be changed from these files; the office ignores such

@@ -1,6 +1,8 @@
-# Agents Office v3 (Beta)
+# Delux crew v3 (Beta)
 
-![Agents Office — six department pods around the Brain, with the Task Status panel](assets/readme-hero.jpg)
+Modified by Delux crew from Agents Office. Original license and attribution are retained.
+
+![Delux crew — six department pods around the Brain, with the Task Status panel](assets/readme-hero.jpg)
 
 A 3D isometric office where AI agents do real work on your own Claude login.
 
@@ -12,16 +14,15 @@ machine.
 
 **Beta.** It works end to end. Expect rough edges and tell us about them in Issues.
 
-**License, in plain English:** Agents Office is a Sahni.ai product. It is free for personal and
-internal use. You may not sell it, resell it, or build a paid product on it. You may not rename it,
-rebrand it, strip the Sahni.ai mark or the notices, present it as your own, or wire it into or bundle
-it with another product, agent system or workforce. (Formal terms: PolyForm Noncommercial 1.0.0 plus
-Sahni.ai's additional terms — see [LICENSE](LICENSE).) The page carries the Sahni.ai mark at the
-bottom-left and a licence line along the bottom; leave them in place.
+**License:** Original license terms and required notices are retained in [LICENSE](LICENSE).
+
+Open the Ember Spark logo at the top left for Onesmus’s contact details: [emberspack@zohomail.com](mailto:emberspack@zohomail.com) · [+12089374658](tel:+12089374658). The interface and scene labels use your device’s system font.
+
+The existing `Agents Office/` folder inside the Brain remains the storage location for rosters, skills, routines and saved work. Demo contacts and businesses are illustrative sample data.
 
 ## Latest updates
 
-![The calendar — tasks and routines on their days, a routine being scheduled from a date](assets/readme-calendar.jpg)
+![Delux crew calendar — tasks arranged by day in the month view](assets/readme-calendar.jpg)
 
 - **The calendar (P)** — 17 Sep 2026 · Everything on the day it belongs to: finished tasks, today's work, tasks you have scheduled, and every routine projected forward. Click any day to schedule a task for it, or switch on REPEAT to start a routine from that date. A rail lists the routines themselves. Month and week, dark mode too. → [The calendar](#the-calendar-everything-on-the-day-it-belongs-to)
 - **Agent Teams** — 16 Sep · Press TEAM or say "as a team": the department lead splits the job across its desks, they work at the same time, leave notes for each other, and the lead writes the final. → [Agent Teams](#agent-teams-the-lead-splits-it-across-the-desks)
@@ -37,22 +38,42 @@ The full list, release by release: [CHANGELOG](CHANGELOG.md).
 - macOS or Linux (Windows: works with `npm` commands directly, `./setup` is Bash only)
 - Node.js 20+ — https://nodejs.org
 - git
-- **Claude Code**, logged in with your Claude account, or an `ANTHROPIC_API_KEY`
+- For live work in the 3D office: **Claude Code**, logged in with your Claude account, or an `ANTHROPIC_API_KEY`
 
 ## Install
 
 ```bash
-git clone https://github.com/ajsahni/agents-office.git
-cd agents-office
+git clone https://github.com/nexxwalker/agents-office.git delux-crew
+cd delux-crew
 ./setup          # checks Node, git and Claude; installs; builds; boots once
 npm start        # → http://localhost:4520
 ```
 
 Without `./setup`: `npm install && node build.mjs && npm start`.
 
-## First five minutes
+## Your personal workspace
 
-1. Open http://localhost:4520. The panel on the right says **LIVE · CLAUDE** when the server is
+The home page at `/` (also `/luxury`) introduces Delux crew. Create an account at `/signup`, then use `/workspace` to create and edit workflows, select a department and planned provider, set due dates, and track queued, active, review and completed stages. Search and activity history use your own account’s saved data. Sign in again at `/login`.
+
+At `/settings`, update your name and workspace, save OpenAI and WhatsApp Business credentials, verify access, or disconnect. OpenAI verification calls `GET /v1/models`; WhatsApp verification reads your Meta business phone number ID. Credentials are encrypted with AES-256-GCM on the server and never returned to the browser. **These connections verify access only.** Provider labels and stage updates do not generate content, send messages or run the existing Claude agents.
+
+Appearance settings offer four presets and custom accent/background colors with automatic text contrast. Save your choice to apply it on later visits and to the 3D office interface. The scene’s department colors remain functional labels. In the office, OpenAI, WhatsApp, Workspace and Settings sit at the top center beside Chrome. A dashed agent connection map follows camera/agent movement, previews unconfigured connections, reflects verified access, and highlights actual matching tool events. Provider status refreshes every 15 seconds and when the office regains focus; the map itself does not run provider requests.
+
+Account data, password hashes, workflow history and sessions live in `data/members/accounts.json`. Back up the entire `data/members/` directory, including `provider.key`; losing this key makes stored provider credentials unreadable. Passwords use salted scrypt hashes, sessions use HttpOnly cookies and expire after seven days. Email verification and password recovery are not implemented. This JSON store supports one server process on a local filesystem; do not run multiple instances against it.
+
+This remains a **trusted local installation**: the existing office, Brain, Claude tools and `/api/tasks` endpoints are shared installation resources, outside the personal workflow board. Member signup does not protect those legacy APIs. Do not expose the installation directly to the public internet. If accessed through a trusted HTTPS proxy, set `DELUX_PUBLIC_ORIGIN` to its exact public origin to enforce that origin and Secure session cookies; the proxy must provide access control for the shared office APIs.
+
+Optional server configuration:
+
+- `DELUX_ACCOUNT_DIR`: an alternative private account storage directory.
+- `DELUX_PUBLIC_ORIGIN`: the trusted public origin, for example `https://workspace.example.com`.
+- `DELUX_OPENAI_URL` / `DELUX_WHATSAPP_URL`: operator-controlled API base URLs for testing. Defaults are OpenAI v1 and Meta Graph v25.0. Credentials are sent to these destinations; use only trusted endpoints.
+
+Run `npm test` for account isolation, sessions, persistence, validation, provider verification contracts and custom-color text contrast. These tests use temporary data and synthetic credentials; they do not contact providers.
+
+## First five minutes in the 3D office
+
+1. Open http://localhost:4520/office. The panel on the right says **LIVE · CLAUDE** when the server is
    connected. Double-clicking `dist/command-centre-v2.html` opens the same office on its own,
    without a server, in demo mode.
 2. In the bar at the top of the panel, pick a department, type a task in plain words, press **Add**.
@@ -320,7 +341,7 @@ you already pay for, and the gauge is there to show it.
 `office.config.json`:
 
 ```json
-{ "name": "Northgate Studio", "brain": "./brain", "port": 4520, "model": "" }
+{ "name": "Delux crew", "brain": "./brain", "port": 4520, "model": "" }
 ```
 
 - **name** — your business. It appears in the title and in every agent's brief.
@@ -385,6 +406,29 @@ Your notes are read from disk and sent to Claude only as context for the task or
 (a handful of the most relevant notes, plus your brain's `CLAUDE.md` and `index.md` if present,
 plus the agent's brief, skills and standing rules from your corrections).
 When an agent calls a connector, that call goes to that service through your own Claude Code
-login, exactly as it would if you called it yourself. Nothing else leaves your machine.
+login, exactly as it would if you called it yourself. When you select Verify access in Settings, the server also sends the saved provider credential to the configured OpenAI or WhatsApp endpoint. WhatsApp checks include the business phone number ID.
 Deliverables are saved locally.
 [![CodeRabbit Pull Request Reviews](https://shields.io)](https://coderabbit.ai)
+
+## Release packaging
+
+Run `node scripts/release.mjs` to assemble a local release under `dist/release/`. Publishing with `--push` requires `RELEASE_REPOSITORY=owner/repository`, a configured Git name and email, and GitHub access to that destination.
+
+## Vercel frontend deployment
+
+Import this repository into Vercel with the repository root as the Root Directory.
+The included `vercel.json` selects `npm run build:vercel` and `dist/vercel` as the
+output directory. To check the output locally, run `npm run build:vercel`.
+The build generates `index.html` for the landing page and preserves direct links
+to `/luxury`, `/signup`, `/login`, `/workspace`, `/settings`, `/office` and `/dark`.
+Only the three generated frontend HTML files are published; development files,
+release assemblies and account storage are excluded. The office graph uses the
+bundled sample brain.
+
+This is a **frontend-only deployment**. Vercel does not run `serve.mjs` through
+this configuration. Signup, login, saved workflows, provider verification and
+live office operations require that backend; they cannot work on static hosting
+alone. API paths deliberately remain 404 instead of returning the landing page.
+For the complete application, run `npm start` on a persistent Node host as
+described above. A public production backend needs durable storage and protection
+for the legacy office APIs before adding a same-origin API proxy to Vercel.

@@ -1,4 +1,4 @@
-// Agents Office v2 — procedural mesh builders (stylised 3D, Image-1/2 blend on nominal palette)
+// Delux crew v2 — procedural mesh builders (stylised 3D, Image-1/2 blend on nominal palette)
 import * as THREE from 'three';
 
 export const PLINTH_H = 2.6;
@@ -60,7 +60,7 @@ export function makeFloorTitle(text, inkColor, width) {
   const W = 1024, H = 192; c.width = W; c.height = H;
   const x = c.getContext('2d');
   x.clearRect(0, 0, W, H);
-  x.font = '700 92px Georgia, "Times New Roman", serif';
+  x.font = '700 92px system-ui, sans-serif';
   x.textAlign = 'center'; x.textBaseline = 'middle';
   const sp = 14; // letterspacing via manual draw
   let total = 0;
@@ -94,8 +94,8 @@ export function makeDeskScreenTexture(chip) {
     // live cream screen (v1 rule: wood desks with live cream/mint screens)
     x.fillStyle = '#FDFFF8'; x.fillRect(0, 0, 256, 160);
     x.fillStyle = chip; x.fillRect(0, 0, 256, 26);
-    x.fillStyle = '#151414'; x.font = 'bold 15px Menlo, monospace'; x.fillText('● working', 10, 18);
-    x.font = '13px Menlo, monospace';
+    x.fillStyle = '#151414'; x.font = 'bold 15px system-ui, sans-serif'; x.fillText('● working', 10, 18);
+    x.font = '13px system-ui, sans-serif';
     lines.forEach((l, i) => {
       x.fillStyle = i === lines.length - 1 ? '#1E9070' : 'rgba(21,20,20,.78)';
       x.fillText(l, 10, 48 + i * 22);
@@ -294,12 +294,12 @@ export function makeHolo(agentName, chip, lines) {
     // header
     x.fillStyle = chip;
     x.beginPath(); x.arc(40, 44, 11, 0, 7); x.fill();
-    x.fillStyle = '#151414'; x.font = '700 27px Georgia, serif';
+    x.fillStyle = '#151414'; x.font = '700 27px system-ui, sans-serif';
     x.fillText(agentName, 62, 54);
     x.strokeStyle = 'rgba(21,20,20,0.12)'; x.lineWidth = 2;
     x.beginPath(); x.moveTo(28, 76); x.lineTo(W - 28, 76); x.stroke();
     // terminal lines
-    x.font = '20px Menlo, monospace';
+    x.font = '20px system-ui, sans-serif';
     ls.forEach((l, i) => {
       x.fillStyle = i === ls.length - 1 ? '#1E9070' : 'rgba(21,20,20,0.72)';
       x.fillText(l.length > 40 ? l.slice(0, 40) + '…' : l, 30, 116 + i * 36);
@@ -369,7 +369,7 @@ export function makeMeetingTable() {
 }
 
 /* ---------- the Brain: GALACTIC-CORE nebula + knowledge web + swirling outer band ----------
-   M4 "HERO BRAIN" (AJ chose A+D from the reference video — a dark galaxy-core map where the
+   M4 "HERO BRAIN" (the owner chose A+D from the reference video — a dark galaxy-core map where the
    centre is a dense multicolour particle nebula and departments light up one at a time):
    A = the nebula — ~1100 particles in the nominal + chip palette, packed bright at the
        centre, differential swirl (core spins faster, like a galaxy), per-particle shimmer,
@@ -511,7 +511,7 @@ export function makeNeuralBrain() {
     band.setColorAt(i, n.colC);
   });
   bandG.add(band);
-  /* links to the outer nodes (M5.5 per AJ — the band dots floated unconnected): local
+  /* links to the outer nodes (M5.5 per the owner — the band dots floated unconnected): local
      nearest-neighbour edges so the ring reads as constellations, plus sparse inward spokes
      tying the outer nodes back to the core. Lives INSIDE bandG so the lines rotate with
      their endpoints (M3.4 lesson: edges must stay attached). */
@@ -534,7 +534,7 @@ export function makeNeuralBrain() {
   }
 
   /* M5: the M4 "space orb" dark backing is DELETED — on the cream office it read as a
-     storm-cloud shadow (AJ). The cream palette above needs no backing; galaxy mode (gk→1)
+     storm-cloud shadow (the owner). The cream palette above needs no backing; galaxy mode (gk→1)
      supplies the dark field page-wide instead. */
   /* tight warm-white glow at the very centre — near-invisible on cream, blooms in galaxy */
   let coreMat;
@@ -636,7 +636,7 @@ export function makeWarnSprite() {
   x.beginPath(); x.moveTo(64, 12); x.lineTo(120, 112); x.lineTo(8, 112); x.closePath();
   x.fillStyle = '#F2B84B'; x.fill();
   x.lineWidth = 7; x.strokeStyle = '#151414'; x.lineJoin = 'round'; x.stroke();
-  x.fillStyle = '#151414'; x.font = '900 64px Inter, sans-serif';
+  x.fillStyle = '#151414'; x.font = '900 64px system-ui, sans-serif';
   x.textAlign = 'center'; x.fillText('!', 64, 98);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, depthTest: false }));

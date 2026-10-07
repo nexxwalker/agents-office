@@ -1,4 +1,4 @@
-// Agents Office — the local server (Beta).
+// Delux crew — the local server (Beta).
 // Serves the office and makes it real on your own Claude login:
 //   · the command bar routes a typed task through Claude to the right agent in the department
 //   · the agent produces the deliverable, which is saved as a note in your brain folder
@@ -52,10 +52,12 @@ import * as usage from './usage.mjs';
 import * as teams from './teams.mjs';
 import { normModel, modelFor, modelArgs, modelId, modelName, MODEL_KEYS, DEFAULT_MODEL, normEffort, effortFor, effortName, EFFORT_KEYS } from './src/models.js';
 import { parseWhen, describe, valid as validWhen, untilText } from './src/when.js';
+import { createAccounts } from './accounts.mjs';
 
 const cfg = loadConfig();
 const HTML = path.join(ROOT, 'dist', 'command-centre-v2.html'); // built by build.mjs; shipped so npm start works without a build
 const DATA = path.join(ROOT, 'data');
+const accountRoutes = createAccounts({ directory: process.env.DELUX_ACCOUNT_DIR || path.join(DATA, 'members') });
 const FILE = path.join(DATA, 'tasks.json');
 const BRAIN = cfg.brainPath;
 const NOTES_DIR = path.join(BRAIN, 'Agents Office');
@@ -457,7 +459,12 @@ const agentsOut = () => { const setup = setupMap(); return AGENTS.map(a => ({ id
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   try {
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/command-centre-v2.html' || url.pathname === '/dark')) {
+    if (await accountRoutes(req, res, url)) return;
+    if (req.method === 'GET' && ['/', '/luxury', '/signup', '/login', '/workspace', '/settings'].includes(url.pathname)) {
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
+      return res.end(fs.readFileSync(path.join(ROOT, 'dist', 'portal.html'), 'utf8'));
+    }
+    if (req.method === 'GET' && (url.pathname === '/office' || url.pathname === '/command-centre-v2.html' || url.pathname === '/dark')) {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
       const page = fs.readFileSync(HTML, 'utf8');
       return res.end(url.pathname === '/dark' ? page.replace('<body>', '<body class="dark">') : page); // /dark: the same file, opened in dark mode
@@ -569,7 +576,7 @@ const server = http.createServer(async (req, res) => {
   } catch (e) { console.error(e); json(res, 500, { error: e.message }); }
 });
 server.listen(cfg.port, () => {
-  console.log(`Agents Office ${version} → http://localhost:${cfg.port}`);
+  console.log(`Delux crew ${version} → http://localhost:${cfg.port}`);
   console.log(`  business: ${cfg.name}   brain: ${BRAIN} (${graph.notes} notes, ${graph.links.length} links)   claude: ${backend} · ${modelName(cfg.model)}${cfg.effort ? ' · effort ' + cfg.effort : ''} by default (routing on Sonnet)`);
   getUsage(true).then(u => console.log(u.source === 'claude' ? `  usage: session ${u.session?.percent ?? '—'}% · week ${u.week?.percent ?? '—'}% (your Claude plan, as Claude Code shows it)` : `  usage: Claude's gauge unavailable (${u.reason}) — showing the office's own count`)).catch(() => {});
   console.log(`  tasks: ${FILE}   notes the agents write: ${NOTES_DIR}`);

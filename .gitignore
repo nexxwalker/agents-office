@@ -1,6 +1,7 @@
 node_modules/
 dist/*
 !dist/command-centre-v2.html
+!dist/portal.html
 data/
 office.config.local.json
 office.agents.local.json

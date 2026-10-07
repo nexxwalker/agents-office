@@ -54,7 +54,7 @@ async function fetchImage(rawUrl) {
   const url = resolveUrl(rawUrl);
   const resp = await fetch(url, {
     redirect: "follow",
-    headers: { "User-Agent": "Mozilla/5.0 (compatible; agents-office/1.0)" },
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; delux-crew/1.0)" },
   });
   if (!resp.ok) throw new Error(`HTTP ${resp.status} fetching ${url}`);
   const contentType = resp.headers.get("content-type") || "";

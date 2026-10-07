@@ -1,5 +1,5 @@
 #!/bin/bash
-# Agents Office — one-command setup (macOS / Linux). Safe to re-run any time.
+# Delux crew — one-command setup (macOS / Linux). Safe to re-run any time.
 set -uo pipefail
 BOLD=$(tput bold 2>/dev/null || true); GREEN=$(tput setaf 2 2>/dev/null || true); RED=$(tput setaf 1 2>/dev/null || true); RESET=$(tput sgr0 2>/dev/null || true)
 ok(){ echo "${GREEN}✓${RESET} $1"; }; fail(){ echo "${RED}✗ $1${RESET}"; exit 1; }; step(){ echo; echo "${BOLD}$1${RESET}"; }

@@ -1,9 +1,9 @@
-// Agents Office V3.6 — the three models, by name. Shared by the page and the server.
-// AJ (9 Sep 2026): "it is either Opus, Sonnet, or Fable. That's it." Sonnet is the default for
+// Delux crew V3.6 — the three models, by name. Shared by the page and the server.
+// the owner (9 Sep 2026): "it is either Opus, Sonnet, or Fable. That's it." Sonnet is the default for
 // everything, including the routing call. Effort lives inside the name (Opus runs at high); nobody
 // sees an effort setting. Four places, one precedence: the task beats the routine beats the agent
 // beats the office default.
-// V3.6.1 (10 Sep 2026): AJ asked for an EFFORT selection beside the model. Five levels as the CLI
+// V3.6.1 (10 Sep 2026): the owner asked for an EFFORT selection beside the model. Five levels as the CLI
 // names them; AUTO (empty) = the model's own default (Opus runs at high). Same four places, same
 // precedence as the model, then the model's own.
 export const MODELS = {

@@ -21,7 +21,7 @@ export function tile(name) {
   const words = String(name).replace(/[^A-Za-z0-9 ]/g, ' ').trim().split(/\s+/);
   const ini = (words.length > 1 ? words[0][0] + words[1][0] : String(name).slice(0, 2)).toUpperCase();
   x.fillStyle = inkOf(name);
-  x.font = `700 ${ini.length > 1 ? 64 : 76}px -apple-system, "Helvetica Neue", Arial, sans-serif`;
+  x.font = `700 ${ini.length > 1 ? 64 : 76}px system-ui, sans-serif`;
   x.textAlign = 'center'; x.textBaseline = 'middle';
   x.fillText(ini, 80, 86);
   return c.toDataURL('image/png');

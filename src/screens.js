@@ -1,4 +1,4 @@
-// LIVE SCREENS (14 Sep 2026). AJ: viewers ask "what are they doing, it just looks like an animation" —
+// LIVE SCREENS (14 Sep 2026). the owner: viewers ask "what are they doing, it just looks like an animation" —
 // so every monitor plays what its seat really runs on. Three players, one per screen kind:
 //   cli  — a recorded Claude Code session (real tool calls, real results, real timings; recorded by
 //          industry-demos/screens/tools/record.mjs against the demo company's sample brain), replayed
@@ -18,8 +18,8 @@ export const hasScreens = () => !!SCREENS;
 export const W = 512, H = 320;
 const BRAIN = (SCREENS && SCREENS.brain) || 'harlan-grove-brain';
 const OWNER = (SCREENS && SCREENS.company) ? String(SCREENS.company).split(' · ')[0] : 'Harlan Grove';                      // one texture size for every screen (16:10 monitor)
-const MONO = '"SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace';
-const SANS = '-apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif';
+const MONO = 'system-ui, sans-serif';
+const SANS = 'system-ui, sans-serif';
 const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 const rnd = (a, b) => a + Math.random() * (b - a);
 

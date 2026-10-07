@@ -1,7 +1,7 @@
 {
-  "name": "agents-office",
+  "name": "delux-crew",
   "version": "3.2.1-beta.2",
-  "description": "Agents Office v3 (Beta) \u2014 a 3D isometric office where AI agents do real work on your own Claude login",
+  "description": "Delux crew v3 (Beta) \u2014 a 3D isometric office where AI agents do real work on your own Claude login",
   "type": "module",
   "private": true,
   "scripts": {
@@ -9,7 +9,9 @@
     "build": "node build.mjs",
     "check": "node check.mjs",
     "check:live": "CHECK_LIVE=1 node check.mjs",
-    "graph": "node graph-build.mjs"
+    "graph": "node graph-build.mjs",
+    "test": "node --test accounts.test.mjs theme.test.mjs",
+    "build:vercel": "node scripts/build-vercel.mjs"
   },
   "engines": {
     "node": ">=20"

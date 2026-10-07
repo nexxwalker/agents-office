@@ -1,4 +1,4 @@
-# Northgate Studio — AI Brain
+# Delux crew — AI Brain
 
 This folder is the company's brain: the notes the agents read before they act and write to when they finish.
 Read `00-Meta/index.md` first, then the MOC (map of content) for the department your task touches.

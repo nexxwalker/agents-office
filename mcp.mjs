@@ -1,4 +1,4 @@
-// Agents Office — connectors (Beta). The office shows the MCP servers YOUR Claude Code is
+// Delux crew — connectors (Beta). The office shows the MCP servers YOUR Claude Code is
 // actually connected to, and hands those same servers to the agents as tools.
 //
 //   discover()          → `claude mcp list`, parsed: every server, its status, the tool id

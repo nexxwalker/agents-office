@@ -1,4 +1,4 @@
-// Agents Office — Agent Teams (V3.2 (16 Sep), 16 Sep 2026).
+// Delux crew — Agent Teams (V3.2 (16 Sep), 16 Sep 2026).
 //
 // A team task is one the department LEAD splits across its own desks: the lead plans the pieces,
 // the teammates work them at the same time, each in its own Claude session with its own context,

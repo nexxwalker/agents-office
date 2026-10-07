@@ -1,4 +1,4 @@
-// Agents Office v2 — Three.js isometric office with zoom-driven LOD
+// Delux crew v2 — Three.js isometric office with zoom-driven LOD
 // Far: clean pods + agent counts (Image 1 read). Near: diorama with 3D people + holo screens (Image 2 read).
 import * as THREE from 'three';
 import { TOKENS, DEPTS, DEPT_KEYS, AGENTS, LAYOUT, WORKLINES, APPROVAL_ASKS, APPROVAL_BY_AGENT } from './data.js';
@@ -14,7 +14,11 @@ import { loadConnectors } from './connectors.js';
 import { initTasks } from './tasks.js';
 import { initBrain } from './brain.js';
 import { initHero, HERO } from './hero.js';
-if (HERO) document.body.classList.add('hero'); // the website hero: no Sahni.ai mark or licence line on top of the page that already carries them // sahni.ai/custom hero mode (16 Sep 2026): opt-in via window.HERO, no-op otherwise
+import { initContact } from './contact.js';
+import { initMember } from './member.js';
+initContact();
+const member = initMember({ THREE });
+if (HERO) document.body.classList.add('hero'); // opt-in embedded website hero
 let tasks = null; // V3 task boards — initialised after the rail constants exist
 
 /* ---------- renderer / scene / camera ---------- */
@@ -30,7 +34,7 @@ const FR = 42; // frustum half-height at zoom 1
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -400, 800);
 const ISO = new THREE.Vector3(1, 0.92, 1).normalize();
 const CAM_DIST = 220;
-// V3.2 overview (AJ, 5 Sep late): every dept card sits ON its own pod, over the wiring. With six
+// V3.2 overview (the owner, 5 Sep late): every dept card sits ON its own pod, over the wiring. With six
 // pods the scene is pulled back to 0.86 and shifted down so the EMAILS and DELIVERY cards can
 // float above their back rows instead of being shoved out to the screen edges.
 // V3.3: the Task Status panel owns the right ~430px at every zoom, so the overview target slides
@@ -137,12 +141,12 @@ for (const [key_, L] of Object.entries(LAYOUT)) {
   plinth.traverse(o => { if (o.isMesh) { o.userData.dept = key_; clickTargets.push(o); } });
   plinth.children[0].userData.part = 'plinth'; plinth.children[1].userData.part = 'floor'; plinth.children[1].userData.chip = dept.chip; // dark mode re-tints these
 
-  // no floor titles — the billboards name each department (AJ's call, M2.3)
+  // no floor titles — the billboards name each department (the owner's call, M2.3)
   scene.add(g);
   deptRT[key_] = { group: g, L };
 }
 
-// brain centre (V3.6, AJ 6 Sep 2026): the particle nebula is RETIRED. The vault's wiki-link graph
+// brain centre (V3.6, the owner 6 Sep 2026): the particle nebula is RETIRED. The vault's wiki-link graph
 // is etched into the pod floor (src/brain.js); reads glint, writes add notes, G opens the full graph.
 let brain;
 {
@@ -153,7 +157,7 @@ let brain;
 
 /* the thinking sweep (M4, D): a soft comet orbits the brain; as it passes each dept's
    azimuth that dept "lights up" — brain particles lean toward its chip colour (handled in
-   makeNeuralBrain) and its billboard gets a chip-coloured glow. Ref: AJ's galaxy video,
+   makeNeuralBrain) and its billboard gets a chip-coloured glow. Ref: the owner's galaxy video,
    departments highlighted one at a time. */
 const SWEEP_PERIOD = 16000; // ms per full orbit
 const DEPT_AZ = {};
@@ -175,7 +179,7 @@ function tickSweep(now) {
       b.classList.add('sweepglow');
     } else if (s <= 0.35 && b.classList.contains('sweepglow')) b.classList.remove('sweepglow');
   }
-  // (the M4 orbiting comet is retired per AJ — the sweep now shows only as the badge glow
+  // (the M4 orbiting comet is retired per the owner — the sweep now shows only as the badge glow
   //  + the brain particles leaning toward the visiting dept's colour)
   return { theta, strength: domS, col: domDept ? DEPTS[domDept].chip : '#FFFFFF' };
 }
@@ -196,7 +200,7 @@ for (const k of DEPT_KEYS) {
 // dark in galaxy mode, unlike the 'brainCore' nebula tagged above
 deptRT.brain.group.traverse(o => { if ((o.isMesh || o.isSprite) && !o.userData.dept) o.userData.dept = 'brain'; });
 
-/* (M5.3 per AJ: the bridge cables are gone — the walkways alone carry the connection;
+/* (M5.3 per the owner: the bridge cables are gone — the walkways alone carry the connection;
    the brain↔dept relationship shows through the badge sweep + meetings.) */
 
 /* desks + people per dept */
@@ -253,7 +257,7 @@ for (const a of AGENTS) {
   };
 }
 
-/* CONNECTORS — per-dept dock of MCP logos with back-and-forth traffic (AJ's spec, 2 Aug rev 2)
+/* CONNECTORS — per-dept dock of MCP logos with back-and-forth traffic (the owner's spec, 2 Aug rev 2)
    V3.1: served, the list is the user's REAL MCP servers (GET /api/mcp) — the strip waits for it.
    Opened as a file the demo list plays at once. `mcp` is a thin proxy so the rest of the office
    never cares which it got. */
@@ -329,7 +333,7 @@ const BB_ROWS = profileRows() || {
     ['REPORTS SENT', () => STATS.reports],
     ['ON TRACK', () => STATS.onTrack + ' / ' + STATS.projects]],
   sales: [
-    ['CALLS S·A·J', () => STATS.spencer + '·' + STATS.arwin + '·' + STATS.jack],
+    ['CALLS S·P·S', () => STATS.seniorRep + '·' + STATS.primaryRep + '·' + STATS.secondaryRep],
     ['NEW MANAGERS', () => STATS.managers],
     ['AUTO-ONBOARDED', () => STATS.autoOnb]],
   marketing: [
@@ -376,7 +380,7 @@ for (const k of [...DEPT_KEYS, 'brain']) {
   // anchor just above the FIRST DESK ROW (z-9.6), not the pod edge — keeps the card-to-agents
   // gap consistent across pods of different depths. Support docks to the side instead: its
   // natural spot is off-screen at overview and the clamp used to shove it onto its agents.
-  // V3.2 (AJ): every card sits ON its own pod, over the wiring — screen-tuned per pod at the
+  // V3.2 (the owner): every card sits ON its own pod, over the wiring — screen-tuned per pod at the
   // 0.84 overview. Standard = centred above the anchor (back corner, y clears the pills);
   // side = hangs off the pod's edge, vertically centred (fin: its back corner is the Brain;
   // ops: its back corner is the marketing pod's front row).
@@ -421,7 +425,7 @@ scene.add(bubble);
 function makeBubbleSprite() {
   const c = document.createElement('canvas'); c.width = c.height = 128;
   const x = c.getContext('2d');
-  x.font = '96px serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.font = '96px system-ui, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
   x.fillText('💬', 64, 70);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, depthTest: false }));
@@ -526,7 +530,7 @@ addEventListener('keydown', (e) => {
 
 // camera mode: mid-tone backdrop for filming the screen (#cam=1 / V toggles)
 function setCam(on) { document.body.classList.toggle('cam', !!on); }
-// DARK MODE (AJ, 6 Sep 2026: "make another one in dark mode as I will show both"): D toggles, #dark=1
+// DARK MODE (the owner, 6 Sep 2026: "make another one in dark mode as I will show both"): D toggles, #dark=1
 // forces it, /dark on the server opens in it. The chrome follows the CSS tokens; the scene
 // re-tints its shared materials (plinths, floors, walkways), relights, and the Brain/wires swap ink.
 let darkOn = false;
@@ -626,7 +630,7 @@ function renderChat(id) {
         ${m.mock ? `<div class="a-mock">${m.mock}</div>` : ''}
         ${m.pending
           ? '<div class="a-btns"><button class="a-yes">APPROVE</button><button class="a-no">REJECT</button></div>'
-          : `<div class="a-done">${m.approved ? '✓ Approved' : '✗ Rejected'} by AJ</div>`}
+          : `<div class="a-done">${m.approved ? '✓ Approved' : '✗ Rejected'} by you</div>`}
       </div>`;
     return '';
   }).join('');
@@ -666,7 +670,7 @@ function focusTarget(k, atPos) {
   return { pos: [base[0] + SCREEN_RIGHT.x * dir, 0, base[2] + SCREEN_RIGHT.z * dir], zoom };
 }
 function enterFocus(k, pendingAgentId) {
-  if (k === 'brain') { // the Brain keeps its plain fly-in (AJ's call)
+  if (k === 'brain') { // the Brain keeps its plain fly-in (the owner's call)
     focused = 'brain';
     if (tasks) tasks.onFocusChange('brain');
     flyTo([LAYOUT.brain.pos[0], 0, LAYOUT.brain.pos[1] + 1.5], 3.1, 700);
@@ -677,7 +681,7 @@ function enterFocus(k, pendingAgentId) {
   if (focused && focused !== k) {
     rail.classList.remove('open', 'agentOpen'); modalOpen = null;
     // dept → dept without passing through overview: the old billboard was hidden when it flew into the
-    // rail (flyBillboardIntoRail) and only exitFocus restores it — bring it back or it stays gone (AJ, 15 Sep)
+    // rail (flyBillboardIntoRail) and only exitFocus restores it — bring it back or it stays gone (the owner, 15 Sep)
     if (focused !== 'brain' && deptRT[focused] && deptRT[focused].badge) deptRT[focused].badge.style.display = '';
   }
   focused = k;
@@ -693,7 +697,7 @@ function enterFocus(k, pendingAgentId) {
   buildDeptRail(k);
   rail.className = RAIL_SIDE[k];
   rail.style.display = 'block';
-  document.body.classList.toggle('railLeft', RAIL_SIDE[k] === 'left'); // the Sahni.ai mark steps right of a docked-left rail
+  document.body.classList.toggle('railLeft', RAIL_SIDE[k] === 'left');
   // V3.4: the rail IS the chat — it opens on the department lead (or first agent) at once
   // (after the className reset above, which would otherwise drop the agentOpen state)
   const first = pendingAgentId || (AGENTS.find(x => x.dept === k && x.lead) || AGENTS.find(x => x.dept === k)).id;
@@ -740,7 +744,7 @@ function buildDeptRail(k) {
     const s = stuckIn(k)[0];
     if (s) openAgentRail(s.a.id);
   });
-  // V3.7 (AJ, 6 Sep): the agent-chip strip is gone — click an agent in the scene to talk to them
+  // V3.7 (the owner, 6 Sep): the agent-chip strip is gone — click an agent in the scene to talk to them
 }
 function cascadeRows() {
   document.querySelectorAll('#railRows .arow').forEach((el, i) => {
@@ -871,7 +875,7 @@ function ago(ts) {
   return m < 1 ? 'now' : m < 60 ? m + 'm ago' : Math.round(m / 60) + 'h ago';
 }
 
-/* ---------- approval mockups — show AJ exactly what he's approving ---------- */
+/* ---------- approval mockups — show the owner exactly what he's approving ---------- */
 function mockupFor(id) {
   const chip = DEPTS[R[id].a.dept].chip;
   const pm = profileMockup(R[id].a.dept, R[id].ask, R[id].a.name, esc); if (pm) return pm; // INDUSTRY PROFILE: the trade's own document, or a cover sheet for this ask
@@ -885,7 +889,7 @@ function mockupFor(id) {
       <div class="d-line"><span>Scope</span><b>matches the brief ✓</b></div>
       <div class="d-p">Hours and scope check out — only the rate is off, and there's no signed variation covering it. Recommend holding payment and querying the rate before it's paid.</div></div>`;
     case 'piper': return `<div class="mk mk-doc">
-      <div class="d-brand">AGENTS OFFICE — PROPOSAL</div>
+      <div class="d-brand">DELUX CREW — PROPOSAL</div>
       <div class="d-title">Ridgeline Property Group</div>
       <div class="d-line"><span>Seats</span><b>12</b></div>
       <div class="d-line"><span>Plan</span><b>Growth</b></div>
@@ -904,7 +908,7 @@ function mockupFor(id) {
       <div class="ph-sub">connect rates nearly double 10:00–11:30am — across 40,000 dials</div>
       <div class="ph-ui"><span>♥ 2.4k</span><span>💬 118</span><span>↗ share</span></div></div>`;
     case 'ada': return `<div class="mk mk-ad">
-      <div class="ad-head"><div class="ad-av"></div><div><div class="ad-who">sahni.ai</div><div class="ad-sp">Sponsored</div></div></div>
+      <div class="ad-head"><div class="ad-av"></div><div><div class="ad-who">Delux crew</div><div class="ad-sp">Sponsored</div></div></div>
       <div class="ad-text">Cold call anxiety? Your first 5 dials decide your whole day…</div>
       <div class="ad-media" style="background:linear-gradient(135deg, ${chip}55, ${chip}22)">“the 10am rule — call when they answer”</div>
       <div class="ad-foot"><span class="ad-hl">Start your free trial</span><span class="ad-cta">SIGN UP</span></div>
@@ -1041,7 +1045,7 @@ function fireAgentEvent(seedTs) {
     if (d === 'emails') { if (roll < 0.45) STATS.emailsSent++; else if (roll < 0.7) STATS.drafts++; }
     else if (d === 'delivery' && roll < 0.2) STATS.reports++;
     else if (d === 'sales') {
-      if (roll < 0.4) STATS[rnd(['spencer', 'arwin', 'jack'])]++;
+      if (roll < 0.4) STATS[rnd(['seniorRep', 'primaryRep', 'secondaryRep'])]++;
       else if (roll < 0.5) STATS.autoOnb++;
       else if (roll < 0.56) STATS.managers++;
     }
@@ -1061,7 +1065,7 @@ for (let i = 0; i < 170; i++) fireAgentEvent(Date.now() - ri(2, 200) * 60000);
 for (const r of Object.values(R)) r.feed.sort((a, b) => b.ts - a.ts);
 
 /* ---------- minimal sim: work bobs, screen updates, brain meetings ---------- */
-let meeting = null; // Brain meetings fire ONLY on the X hotkey (AJ's call — demo cue, not ambient)
+let meeting = null; // Brain meetings fire ONLY on the X hotkey (the owner's call — demo cue, not ambient)
 let nextApprovalAt = performance.now() + 20000;
 let nextMetricAt = performance.now() + 3000;
 let nextEmoteAt = performance.now() + 2000;
@@ -1098,7 +1102,7 @@ function walkStep(r, dt) {
 }
 
 // desk-life variety: each agent cycles through work modes on its own clock
-// no 'stretch' — AJ found the stand-up stretches annoying (1 Aug). Last entry = pick fallback.
+// no 'stretch' — the owner found the stand-up stretches annoying (1 Aug). Last entry = pick fallback.
 const WORK_MODES = [
   ['type', 0.30, 4000, 7500], ['read', 0.18, 3500, 6500], ['phone', 0.16, 4000, 8000],
   ['glance', 0.17, 2000, 3500], ['sip', 0.11, 2500, 4000], ['spin', 0.08, 1400, 2000],
@@ -1147,7 +1151,7 @@ function getEmoteTex(icon) {
     x.lineWidth = 3; x.strokeStyle = 'rgba(21,20,20,0.25)'; x.stroke();
     x.beginPath(); x.moveTo(50, 106); x.lineTo(64, 124); x.lineTo(74, 104); x.closePath();
     x.fillStyle = 'rgba(253,255,248,0.97)'; x.fill();
-    x.font = '58px "Apple Color Emoji", serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = '58px system-ui, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
     x.fillStyle = '#151414';
     x.fillText(icon, 64, 64);
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
@@ -1225,7 +1229,7 @@ function tickSim(now, dt) {
       }
     }
   }
-  // stuck agents STAND, face the camera and WAVE under their pulsing ⚠ (AJ's spec)
+  // stuck agents STAND, face the camera and WAVE under their pulsing ⚠ (the owner's spec)
   for (const r of Object.values(R)) {
     if (r.state === 'stuck') {
       poseWork(r.person, 'wave', now + r.bob * 500, dt);
@@ -1312,7 +1316,7 @@ function tickLOD() {
     d.badge.style.opacity = 1 - 0.75 * focusDim; // unfocused boards recede with the scene
     d.badge.style.pointerEvents = 'auto';
   }
-  // name pills stay on at EVERY zoom (AJ's call) — smaller when far, full-size when near
+  // name pills stay on at EVERY zoom (the owner's call) — smaller when far, full-size when near
   const pillScale = 0.62 + 0.38 * smooth(1.2, 2.4, z);
   for (const r of Object.values(R)) {
     const p = r.person.position;
@@ -1370,8 +1374,8 @@ function applyRoster(agents) {
 tasks = initTasks({
   hud, R, deptRT, RAIL_SIDE, spawnEmote, chatPush, chatHist, feedPush, zoomToApproval, enterFocus, openAgent, esc,
   brainWrite: (id, title) => brain.write(id, title), brain,
-  onLive: (h) => { document.querySelector('#topbar .brand .ver').textContent = 'BETA'; document.title = `${h.name} — Agents Office`; brain.setOwner(h.name); brain.setQuiet(true); applyRoster(h.agents); },
-  onTools: (agentId, keys) => mcp.onToolsUsed(agentId, keys),
+  onLive: (h) => { document.querySelector('#topbar .brand .ver').textContent = 'BETA'; document.title = `${h.name} — Delux crew`; brain.setOwner(h.name); brain.setQuiet(true); applyRoster(h.agents); },
+  onTools: (agentId, keys) => { mcp.onToolsUsed(agentId, keys); member.onToolsUsed(agentId, keys); },
   requestApproval, setStuck: setStuckLive,
   onUsage: (u) => { if (mcp && mcp.setUsage) mcp.setUsage(u); }, // V3.6: the plan's gauge in the top bar
   getFocused: () => focused, getZoom: () => view.zoom, getFocusDim: () => focusDim,
@@ -1422,6 +1426,7 @@ function loop(now) {
   tasks.tick(now);
   mcp.tick(now, dt, view, camera, focused, focusDim);
   syncOverviewBtn();
+  member.tick(now, camera, R, focused);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }

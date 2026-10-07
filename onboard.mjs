@@ -1,4 +1,4 @@
-// Agents Office — the department lead interviews the owner (Beta).
+// Delux crew — the department lead interviews the owner (Beta).
 // In the chat with a department lead, say "set up". The lead asks five questions, one at a time,
 // about how that department works here, then writes it down for the team:
 //   · a brief for each agent in the department   → <brain>/Agents Office/agents.json

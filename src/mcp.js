@@ -1,5 +1,5 @@
-// CONNECTORS — per-department dock of MCP brand-logo tiles (AJ's spec, 2 Aug 2026, rev 2).
-// v1 was an orbit ring; AJ: "uncoordinated and hard to notice". Now each dept has ONE fixed
+// CONNECTORS — per-department dock of MCP brand-logo tiles (the owner's spec, 2 Aug 2026, rev 2).
+// v1 was an orbit ring; the owner: "uncoordinated and hard to notice". Now each dept has ONE fixed
 // "CONNECTORS" group — a tidy camera-facing row of tiles — with constant back-and-forth
 // packet traffic between tiles and desks so the connectors visibly help the agents work.
 // Real sim events fire a strong pulse + tile→desk beam + return ack; ambient exchanges keep
@@ -42,7 +42,7 @@ const FRONT = new THREE.Vector3(1, 0, 1).normalize();
 // the Brain constellation and each dept's focus rail. Verified by screenshot, not theory.
 // fdir/fdist/fh (optional) = a SECOND anchor used while that dept is focused, lerped in by
 // focusDim — the marketing focus look (row floating in the empty gap beside the pod, labels
-// under, pill above) is AJ's approved reference; support/sales re-anchor to match it.
+// under, pill above) is the owner's approved reference; support/sales re-anchor to match it.
 const DOCKS = {
   marketing: { dir: SR.clone().negate(), dist: 12.5, h: 8.0 },  // screen-left of pod — the approved reference look
   emails:    { dir: SR.clone(),          dist: 12.5, h: 8.0,    // overview: screen-right of pod (was support's slot)
@@ -178,6 +178,8 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
       topconn.appendChild(img);
       topImgs[k] = img;
     });
+    // Keep Chrome immediately beside the member links even with other MCP servers.
+    if (topImgs.chrome) { topconn.appendChild(topImgs.chrome); topconn.scrollLeft = topconn.scrollWidth; }
     if (LIVE && !uniqKeys.length) { // honest empty state — nothing is wired until the user connects something
       const none = document.createElement('span');
       none.className = 'tc-none';
@@ -188,7 +190,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
 
   // cam + dockAcur are set every tick. At overview (dockAcur low) all connector traffic
   // rides the PERMANENT WIRES below — nothing free-flies (free packets from the top bar
-  // read as "drones attacking the pods", AJ). Zoomed in, tile→desk beams as before.
+  // read as "drones attacking the pods", the owner). Zoomed in, tile→desk beams as before.
   // volleyAt schedules the boot/replay flourish: a pulse from every connector into its dept(s).
   let cam = null, dockAcur = 0;
   let volleyAt = performance.now() + uniqKeys.length * 90 + 900;
@@ -235,7 +237,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
       port: [L.pos[0] + cx * L.w / 2, 1.3, L.pos[1] + cz * L.d / 2],
       fport: [L.pos[0] - L.w / 2, 1.3, L.pos[1] - L.d / 2] }; // V3.5 focus: the back corner
   });
-  // SHARED wiring (gmail per AJ 3 Aug rev 2; notion joins 5 Sep): NOT part of any dept fan/loom —
+  // SHARED wiring (gmail per the owner 3 Aug rev 2; notion joins 5 Sep): NOT part of any dept fan/loom —
   // from its far-right logo each shared connector drops to its own junction, then runs one fully
   // INDEPENDENT trunk-style conduit per using dept, entering the pod at its own socket a few
   // units along the edge from the dept's port (cables plugged in side by side, never merged).
@@ -276,7 +278,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     shared[key] = { ink, drop, jdot, wires: wiresOf, offset: 0, jy: 92 + si * 10 };
   });
 
-  // ── the MODEL layer (AJ, 5 Sep 2026): Claude + ChatGPT run the office headless ──
+  // ── the MODEL layer (the owner, 5 Sep 2026): Claude + ChatGPT run the office headless ──
   // Two logos on the right of the top bar, each wired straight into the Brain pod — the
   // conduits pulse on their own so the thinking is visible even when nothing else fires.
   const MODELS = { claude: '#D97757', chatgpt: '#151414' };
@@ -339,7 +341,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     if (modelImgs[k] && strong) { modelImgs[k].classList.remove('tpulse'); void modelImgs[k].offsetWidth; modelImgs[k].classList.add('tpulse'); }
   }
 
-  // subtle by design (rev 2, AJ: pulses still read as attacks): small, dim, slow glides
+  // subtle by design (rev 2, the owner: pulses still read as attacks): small, dim, slow glides
   function wirePulse(dept, { reverse = false, delay = 0, scale = 1, shared: sk = null, model = null } = {}) {
     const el = document.createElementNS(svgNS, 'circle');
     el.setAttribute('r', 2.2 * scale);
@@ -350,21 +352,21 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
   }
   let stripDept = undefined;
   function tickWires(now, dt, wireA, focused) {
-    // V3.4 (AJ): inside a department the header strip shows THAT dept's connectors (the others
+    // V3.4 (the owner): inside a department the header strip shows THAT dept's connectors (the others
     // hide); the wiring loom still fades out. At overview every logo shows and the loom is back.
     const f = (focused && focused !== 'brain') ? focused : null;
     if (topconn) {
       if (f) {
         topconn.style.opacity = 1; topconn.style.visibility = 'visible';
         if (stripDept !== f) { // centre the strip and name the department it feeds
-          for (const [k, img] of Object.entries(topImgs)) img.style.display = BY_DEPT[f].includes(k) ? '' : 'none';
+          for (const [k, img] of Object.entries(topImgs)) img.style.display = k === 'chrome' || BY_DEPT[f].includes(k) ? '' : 'none';
           topconn.classList.add('focus');
           topconn.querySelector('.tc-lab').innerHTML =
             `<span class="dot" style="background:${DEPTS[f].chip}"></span>${DEPTS[f].short} · CONNECTED TO`;
         }
       } else {
-        topconn.style.opacity = wireA;
-        topconn.style.visibility = wireA < 0.02 ? 'hidden' : 'visible';
+        topconn.style.opacity = 1;
+        topconn.style.visibility = 'visible';
         if (stripDept !== null) {
           for (const img of Object.values(topImgs)) img.style.display = '';
           topconn.classList.remove('focus');
@@ -379,6 +381,12 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     }
     if (wireA < 0.02) { svg.style.display = 'none'; return; }
     svg.style.display = 'block';
+    const headerBottom = document.getElementById('topbar').getBoundingClientRect().bottom;
+    const logoRect = (image, container) => {
+      if (!image || !container) return null;
+      const r = image.getBoundingClientRect(), strip = container.getBoundingClientRect();
+      return r.width && r.height && strip.width && r.right > strip.left && r.left < strip.right ? r : null;
+    };
     const hideWire = (w) => { w.path.setAttribute('d', ''); w.branch && w.branch.setAttribute('d', ''); w.jdot && w.jdot.setAttribute('opacity', 0); w.dot.setAttribute('opacity', 0); };
     for (const [dept, w] of Object.entries(wires)) {
       if (f && dept !== f) { hideWire(w); continue; } // focus: only this department's loom
@@ -386,16 +394,16 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
       // junction depths are staggered per dept so neighbouring fans don't overlap.
       // gmail is EXCLUDED from every fan — it feeds the junctions via its own loom below
       const xs = BY_DEPT[dept].filter(k => !SHARED[k]).map(k => {
-        const r = topImgs[k].getBoundingClientRect();
-        return (r.left + r.right) / 2;
-      });
+        const r = logoRect(topImgs[k], topconn);
+        return r ? (r.left + r.right) / 2 : null;
+      }).filter(x => x !== null);
       if (!xs.length) { // a dept fed only by shared connectors (EMAILS) has no trunk of its own
         w.path.setAttribute('d', ''); w.branch.setAttribute('d', '');
         w.jdot.setAttribute('opacity', 0); w.dot.setAttribute('opacity', 0);
         continue;
       }
       const jx = xs.reduce((a, b) => a + b, 0) / xs.length;
-      const jy = f ? 100 : 104 + w.ji * 12, sy = 50;
+      const sy = headerBottom, jy = Math.max(f ? 100 : 104 + w.ji * 12, sy + 22 + w.ji * 6);
       w.branch.setAttribute('d', xs.map(x =>
         `M ${x} ${sy} C ${x} ${sy + (jy - sy) * 0.5}, ${jx} ${jy - (jy - sy) * 0.4}, ${jx} ${jy}`).join(' '));
       const pt = f ? w.fport : w.port;
@@ -407,7 +415,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
         `${ex + side * bow} ${ey - (ey - jy) * 0.45}, ${ex} ${ey}`);
       w.offset -= dt * (f ? 13 : 6); // slow crawl toward the pod (slower still at rest)
       w.path.setAttribute('stroke-dashoffset', w.offset);
-      w.path.setAttribute('stroke-opacity', (f ? 0.8 : 0.26) * wireA); // V3.5: at rest the loom is half as loud (AJ)
+      w.path.setAttribute('stroke-opacity', (f ? 0.8 : 0.26) * wireA); // V3.5: at rest the loom is half as loud (the owner)
       w.path.setAttribute('stroke-width', f ? 2.2 : 1.6); // heavier in focus so the camera reads it
       w.branch.setAttribute('stroke-dashoffset', w.offset);
       w.branch.setAttribute('stroke-opacity', (f ? 0.85 : 0.3) * wireA);
@@ -421,8 +429,9 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     // trunk-style conduit per using dept, ending at that connector's own socket on the pod
     for (const [key, sh] of Object.entries(shared)) {
       if (!topImgs[key]) continue;
-      const gr = topImgs[key].getBoundingClientRect();
-      const gx = (gr.left + gr.right) / 2, gsy = 50, gjy = sh.jy;
+      const gr = logoRect(topImgs[key], topconn);
+      if (!gr) { sh.drop.setAttribute('d', ''); sh.jdot.setAttribute('opacity', 0); for (const wire of Object.values(sh.wires)) hideWire(wire); continue; }
+      const gx = (gr.left + gr.right) / 2, gsy = headerBottom, gjy = Math.max(sh.jy, gsy + 30);
       sh.drop.setAttribute('d', `M ${gx} ${gsy} L ${gx} ${gjy}`);
       sh.offset -= dt * (f ? 13 : 6);
       sh.drop.setAttribute('stroke-dashoffset', sh.offset);
@@ -448,8 +457,9 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     // model wiring: Claude + ChatGPT logos → the Brain's back edge; they pulse on their own
     for (const [k, m] of Object.entries(mwires)) {
       if (!modelImgs[k]) continue;
-      const r = modelImgs[k].getBoundingClientRect();
-      const mx = (r.left + r.right) / 2, msy = 50;
+      const r = logoRect(modelImgs[k], topmodels);
+      if (!r) { m.path.setAttribute('d', ''); m.dot.setAttribute('opacity', 0); continue; }
+      const mx = (r.left + r.right) / 2, msy = headerBottom;
       v3.set(m.port[0], m.port[1], m.port[2]).project(cam);
       const ex = (v3.x * 0.5 + 0.5) * innerWidth, ey = (-v3.y * 0.5 + 0.5) * innerHeight;
       m.path.setAttribute('d', `M ${mx} ${msy} C ${mx} ${msy + (ey - msy) * 0.45}, ${ex + 40} ${ey - (ey - msy) * 0.35}, ${ex} ${ey}`);
@@ -516,7 +526,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
 
   // packet train along an arc. reverse=true sends desk → tile (the "ack"/request direction)
   // ephemeral connection line under an exchange — packets riding a visible wire read as
-  // data transfer; the same dots free-flying read as projectiles ("attacking the pods", AJ)
+  // data transfer; the same dots free-flying read as projectiles ("attacking the pods", the owner)
   const streams = new Map(); // key -> {line, mat, dept, t0, until}
   function ensureStream(from, mid, to, dept, now, until) {
     const key = [from.x, from.z, to.x, to.z].map(v => v.toFixed(1)).join(':');
@@ -645,7 +655,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
     const labelA = smooth(2.0, 2.5, z);
     const pillScale = 0.68 + 0.32 * smooth(1.2, 2.4, z);
     cam = camera;
-    // V3.5 (AJ, 6 Sep): the in-world tile docks are RETIRED — the top-bar strip is the
+    // V3.5 (the owner, 6 Sep): the in-world tile docks are RETIRED — the top-bar strip is the
     // connectors at every zoom (centred + wired to the pod in focus). dockA pinned to 0 keeps
     // the sprites/labels/pills hidden and routes all traffic onto the wires.
     const dockA = 0;
@@ -722,7 +732,7 @@ export function initMcp({ scene, hud, LAYOUT, DEPTS, FR, R, connectors = null })
       dk.conn.style.opacity = (dimmed ? 1 - 0.85 * focusDim : 1) * dockA;
 
       // steady exchange: a random connector and a random desk trade packets both ways —
-      // the constant "connectors helping the agents" energy AJ asked for
+      // the constant "connectors helping the agents" energy the owner asked for
       if (now > dk.nextAmbient && dk.seats.length && n) { // n = 0 when no connector is wired to this pod — nothing to pulse
         const item = byDept[dept][Math.floor(Math.random() * n)];
         const seat = dk.seats[Math.floor(Math.random() * dk.seats.length)];

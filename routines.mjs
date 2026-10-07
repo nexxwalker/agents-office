@@ -1,4 +1,4 @@
-// Agents Office V3.5 — routines: tasks the office does on its own clock.
+// Delux crew V3.5 — routines: tasks the office does on its own clock.
 //
 // A routine is a line in <brain>/Agents Office/routines.json (yours: written by the task bar,
 // by a department lead in chat, or by Claude Code). Run state — when each one is next due, when

@@ -1,4 +1,4 @@
-// Agents Office — skills (Beta). A skill is how the owner wants one kind of work done: a folder
+// Delux crew — skills (Beta). A skill is how the owner wants one kind of work done: a folder
 // with a SKILL.md (what, when, the steps, the format) and any templates or examples beside it.
 // The agent it is bound to reads the whole skill before every task and every chat turn.
 //

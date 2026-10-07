@@ -1,6 +1,6 @@
 # Proposal for {Client}
 
-**Prepared for** {name, role}   **From** Northgate Studio   **Valid until** {date, 14 days out}
+**Prepared for** {name, role}   **From** Delux crew   **Valid until** {date, 14 days out}
 
 ## What you told us
 Three or four lines in their words: the problem, what it is costing them, what they want by when.

@@ -1,4 +1,4 @@
-// Agents Office V3.6 — the Brain as an etched floor (AJ, 6 Sep 2026: option B + the panel strip).
+// the owner V3.6 — the Brain as an etched floor (the owner, 6 Sep 2026: option B + the panel strip).
 // The particle nebula is gone. The vault's wiki-link graph (src/braingraph.js, baked by
 // graph-build.mjs) is drawn into the floor of the centre pod as faint ink line-work: texture at
 // overview, a graph when you lean in. It moves only when an agent READS (a note glints green and a
@@ -131,7 +131,7 @@ export function initBrain({ scene, brainGroup, getR, esc, hud, toScreen, getCame
     }
     fx.push({ sprite: s, line, born: performance.now() });
   }
-  let quiet = false; // V3.5 (AJ: "the alerts on the Brain are distracting"): a live office shows only REAL reads and writes — no theatre glints, no ambient pulse
+  let quiet = false; // V3.5 (the owner: "the alerts on the Brain are distracting"): a live office shows only REAL reads and writes — no theatre glints, no ambient pulse
   function setQuiet(on) { quiet = !!on; }
   function read(agentId) {
     const a = agentOf(agentId); if (!a) return;
@@ -286,7 +286,7 @@ export function initBrain({ scene, brainGroup, getR, esc, hud, toScreen, getCame
       bctx.strokeStyle = lit ? 'rgba(232,230,223,.85)' : `rgba(232,230,223,${hi || match ? .05 : .15})`;
       bctx.beginPath(); bctx.moveTo(sx(A), sy(A)); bctx.lineTo(sx(B), sy(B)); bctx.stroke();
     }
-    bctx.font = `${Math.max(9, 10 * Math.sqrt(k))}px Inter, -apple-system, sans-serif`; bctx.textBaseline = 'middle';
+    bctx.font = `${Math.max(9, 10 * Math.sqrt(k))}px system-ui, sans-serif`; bctx.textBaseline = 'middle';
     for (const n of nodes) {
       if (!visible(n)) continue;
       const x = sx(n), y = sy(n); const r = (1.6 + Math.sqrt(n.d) * .75) * Math.sqrt(k);

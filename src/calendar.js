@@ -1,4 +1,4 @@
-// Agents Office V3.2.1 (16 Sep 2026) — the CALENDAR (P). One quiet screen with everything the office
+// Delux crew V3.2.1 (16 Sep 2026) — the CALENDAR (P). One quiet screen with everything the office
 // has done, is doing, and will do on the day it belongs to: finished tasks on the day they finished,
 // today's work on today, tasks scheduled for a date, and every routine projected forward on the days
 // it will fire. Click a day to schedule a task for it, or to start a routine from that date. A rail on
